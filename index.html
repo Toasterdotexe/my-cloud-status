@@ -213,7 +213,7 @@
             <option value="offline_busy">❌ Offline, Busy</option>
             <option value="sleeping">🌙 Sleeping</option>
             <option value="gaming">🎮 Gaming</option>
-            <option value="watching_tv>📺 Watching TV</option>
+            <option value="watching_tv">📺 Watching TV</option>
         </select>
 
         <button id="saveButton">Publish status</button>
@@ -254,48 +254,51 @@
     // ADD NEW STATUSES HERE!
     // ==========================================
 
-    const statuses = {
-        online_free: {
-            icon: "🟢",
-            name: "Online, Free",
-            description: "Available right now."
-        },
 
-        offline_free: {
-            icon: "⭕",
-            name: "Offline, Free",
-            description: "Offline, but not busy."
-        },
+const statuses = {
+    online_free: {
+        icon: "🟢",
+        name: "Online, Free",
+        description: "Available right now."
+    },
 
-        online_busy: {
-            icon: "🛠️",
-            name: "Online, Busy",
-            description: "Online, but currently busy."
-        },
+    offline_free: {
+        icon: "⭕",
+        name: "Offline, Free",
+        description: "Offline, but not busy."
+    },
 
-        offline_busy: {
-            icon: "❌",
-            name: "Offline, Busy",
-            description: "Offline and busy."
-        },
+    online_busy: {
+        icon: "🛠️",
+        name: "Online, Busy",
+        description: "Online, but currently busy."
+    },
 
-        sleeping: {
-            icon: "🌙",
-            name: "Sleeping",
-            description: "Away for the night."
-        },
+    offline_busy: {
+        icon: "❌",
+        name: "Offline, Busy",
+        description: "Offline and busy."
+    },
 
-        gaming: {
-            icon: "🎮",
-            name: "Gaming",
-            description: "Currently playing a game."
-        }
-            
-        watching_tv: {
+    sleeping: {
+        icon: "🌙",
+        name: "Sleeping",
+        description: "Away for the night."
+    },
+
+    gaming: {
+        icon: "🎮",
+        name: "Gaming",
+        description: "Currently playing a game."
+    },
+
+    watching_tv: {
         icon: "📺",
         name: "Watching TV",
         description: "Watching TV."
-    };
+    }
+};
+
 
     const statusIcon = document.getElementById("statusIcon");
     const statusName = document.getElementById("statusName");
