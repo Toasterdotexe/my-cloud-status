@@ -1,528 +1,530 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Cloud Status</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cloud Status</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      padding: 30px 16px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #10131b;
-      color: #f4f6fb;
-      font-family: Arial, sans-serif;
-    }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 30px 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #10131b;
+            color: #f4f6fb;
+            font-family: Arial, sans-serif;
+        }
 
-    .container {
-      width: 100%;
-      max-width: 540px;
-      padding: 30px;
-      border: 1px solid #303747;
-      border-radius: 20px;
-      background: #1a202c;
-      box-shadow: 0 18px 55px #0006;
-    }
+        .container {
+            width: 100%;
+            max-width: 540px;
+            padding: 30px;
+            border: 1px solid #303747;
+            border-radius: 20px;
+            background: #1a202c;
+            box-shadow: 0 18px 55px #0006;
+        }
 
-    h1 {
-      margin: 0 0 8px;
-      text-align: center;
-      font-size: 30px;
-    }
+        h1 {
+            margin: 0 0 8px;
+            text-align: center;
+            font-size: 30px;
+        }
 
-    .subtitle {
-      margin: 0 0 28px;
-      color: #aab3c4;
-      text-align: center;
-    }
+        .subtitle {
+            margin: 0 0 28px;
+            color: #aab3c4;
+            text-align: center;
+        }
 
-    .status-card {
-      padding: 25px 18px;
-      border: 1px solid #394355;
-      border-radius: 15px;
-      background: #111722;
-      text-align: center;
-    }
+        .status-card {
+            padding: 25px 18px;
+            border: 1px solid #394355;
+            border-radius: 15px;
+            background: #111722;
+            text-align: center;
+        }
 
-    .status-icon {
-      margin-bottom: 10px;
-      font-size: 48px;
-    }
+        .status-icon {
+            margin-bottom: 10px;
+            font-size: 48px;
+        }
 
-    .status-name {
-      font-size: 23px;
-      font-weight: bold;
-    }
+        .status-name {
+            font-size: 23px;
+            font-weight: bold;
+        }
 
-    .status-description {
-      margin-top: 8px;
-      color: #aab3c4;
-      font-size: 14px;
-    }
+        .status-description {
+            margin-top: 8px;
+            color: #aab3c4;
+            font-size: 14px;
+        }
 
-    .section {
-      margin-top: 25px;
-      padding-top: 22px;
-      border-top: 1px solid #303747;
-    }
+        .section {
+            margin-top: 25px;
+            padding-top: 22px;
+            border-top: 1px solid #303747;
+        }
 
-    .section h2 {
-      margin: 0 0 14px;
-      font-size: 18px;
-    }
+        .section h2 {
+            margin: 0 0 14px;
+            font-size: 18px;
+        }
 
-    button, select {
-      width: 100%;
-      min-height: 45px;
-      margin-top: 10px;
-      padding: 11px 14px;
-      border: 0;
-      border-radius: 9px;
-      font-size: 15px;
-      font-weight: bold;
-    }
+        button,
+        select {
+            width: 100%;
+            min-height: 45px;
+            margin-top: 10px;
+            padding: 11px 14px;
+            border: 0;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: bold;
+        }
 
-    button {
-      cursor: pointer;
-      background: #667eea;
-      color: white;
-    }
+        button {
+            cursor: pointer;
+            background: #667eea;
+            color: white;
+        }
 
-    button:hover {
-      background: #788df5;
-    }
+        button:hover {
+            background: #788df5;
+        }
 
-    button.secondary {
-      border: 1px solid #465168;
-      background: #252e3e;
-      color: #e9edf7;
-    }
+        button.secondary {
+            border: 1px solid #465168;
+            background: #252e3e;
+            color: #e9edf7;
+        }
 
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.55;
-    }
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
 
-    select {
-      border: 1px solid #465168;
-      background: #111722;
-      color: white;
-    }
+        select {
+            border: 1px solid #465168;
+            background: #111722;
+            color: white;
+        }
 
-    .message {
-      min-height: 20px;
-      margin-top: 12px;
-      color: #aab3c4;
-      font-size: 13px;
-      overflow-wrap: anywhere;
-    }
+        .message {
+            min-height: 20px;
+            margin-top: 12px;
+            color: #aab3c4;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
 
-    .account {
-      color: #aab3c4;
-      font-size: 13px;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-    }
+        .account {
+            color: #aab3c4;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
 
-    .account strong {
-      color: #f4f6fb;
-    }
+        .account strong {
+            color: #f4f6fb;
+        }
 
-    .uuid {
-      margin-top: 8px;
-      padding: 10px;
-      border-radius: 8px;
-      background: #111722;
-      color: #b9c8ff;
-      font-family: monospace;
-      font-size: 12px;
-      overflow-wrap: anywhere;
-    }
+        .uuid {
+            margin-top: 8px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #111722;
+            color: #b9c8ff;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
 
-    .hidden {
-      display: none;
-    }
+        .hidden {
+            display: none;
+        }
 
-    .footer {
-      margin-top: 25px;
-      color: #778196;
-      text-align: center;
-      font-size: 12px;
-    }
+        .footer {
+            margin-top: 25px;
+            color: #778196;
+            text-align: center;
+            font-size: 12px;
+        }
 
-    .live-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      margin-right: 6px;
-      border-radius: 50%;
-      background: #43d68b;
-      box-shadow: 0 0 9px #43d68b;
-    }
-  </style>
+        .live-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 6px;
+            border-radius: 50%;
+            background: #43d68b;
+            box-shadow: 0 0 9px #43d68b;
+        }
+    </style>
 </head>
 
 <body>
-  <main class="container">
-    <h1>☁️ My Cloud Status</h1>
-    <p class="subtitle">A shared status board, updated live.</p>
+    <main class="container">
+        <h1>☁️ My Cloud Status</h1>
+        <p class="subtitle">A shared status board, updated live.</p>
 
-    <section class="status-card">
-      <div class="status-icon" id="statusIcon">⏳</div>
-      <div class="status-name" id="statusName">Loading status...</div>
-      <div class="status-description" id="statusDescription">
-        Connecting to the cloud
-      </div>
-    </section>
+        <section class="status-card">
+            <div class="status-icon" id="statusIcon">⏳</div>
+            <div class="status-name" id="statusName">Loading status...</div>
+            <div class="status-description" id="statusDescription">
+                Connecting to the cloud
+            </div>
+        </section>
 
-    <div class="message" id="connectionMessage" role="status">
-      Connecting...
-    </div>
+        <div class="message" id="connectionMessage" role="status">
+            Connecting...
+        </div>
 
-    <section class="section">
-      <h2>Account</h2>
+        <section class="section">
+            <h2>Account</h2>
 
-      <div id="signedOut">
-        <p class="account">
-          Sign in with GitHub to access your account.
-          Visitors can view the shared status without signing in.
-        </p>
-        <button id="loginButton">Sign in with GitHub</button>
-      </div>
+            <div id="signedOut">
+                <p class="account">
+                    Sign in with GitHub to access your account.
+                    Visitors can view the shared status without signing in.
+                </p>
+                <button id="loginButton">Sign in with GitHub</button>
+            </div>
 
-      <div id="signedIn" class="hidden">
-        <p class="account">
-          Signed in as <strong id="accountName">GitHub user</strong>
-        </p>
-        <div class="account">Your Supabase user ID:</div>
-        <div class="uuid" id="userId"></div>
-        <button class="secondary" id="copyIdButton">Copy my user ID</button>
-        <button class="secondary" id="logoutButton">Sign out</button>
-      </div>
-    </section>
+            <div id="signedIn" class="hidden">
+                <p class="account">
+                    Signed in as <strong id="accountName">GitHub user</strong>
+                </p>
+                <div class="account">Your Supabase user ID:</div>
+                <div class="uuid" id="userId"></div>
+                <button class="secondary" id="copyIdButton">Copy my user ID</button>
+                <button class="secondary" id="logoutButton">Sign out</button>
+            </div>
+        </section>
 
-    <section class="section hidden" id="adminSection">
-      <h2>Change shared status</h2>
+        <section class="section hidden" id="adminSection">
+            <h2>Change shared status</h2>
 
-      <select id="statusSelect">
-        <option value="online_free">🟢 Online, Free</option>
-        <option value="offline_free">⭕ Offline, Free</option>
-        <option value="online_busy">🛠️ Online, Busy</option>
-        <option value="offline_busy">❌ Offline, Busy</option>
-      </select>
+            <select id="statusSelect">
+                <option value="online_free">🟢 Online, Free</option>
+                <option value="offline_free">⭕ Offline, Free</option>
+                <option value="online_busy">🛠️ Online, Busy</option>
+                <option value="offline_busy">❌ Offline, Busy</option>
+            </select>
 
-      <button id="saveButton">Publish status</button>
-      <div class="message" id="saveMessage"></div>
-    </section>
+            <button id="saveButton">Publish status</button>
+            <div class="message" id="saveMessage"></div>
+        </section>
 
-    <section class="section hidden" id="lockedSection">
-      <p class="account">
-        You're signed in, but this account has not been authorized to change
-        the shared status.
-      </p>
-    </section>
+        <section class="section hidden" id="lockedSection">
+            <p class="account">
+                You're signed in, but this account has not been authorized to change
+                the shared status.
+            </p>
+        </section>
 
-    <div class="footer">
-      <span class="live-dot"></span>Live status connection
-    </div>
-  </main>
+        <div class="footer">
+            <span class="live-dot"></span>Live status connection
+        </div>
+    </main>
 
-  <script>
-    // ------------------------------------------
-    // SUPABASE CONNECTION
-    // ------------------------------------------
+    <script>
+        // ------------------------------------------
+        // SUPABASE CONNECTION
+        // ------------------------------------------
 
-    const SUPABASE_URL =
-      "https://fljftolujmqjpzvkzsdw.supabase.co";
+        const SUPABASE_URL =
+            "https://fljftolujmqjpzvkzsdw.supabase.co";
 
-    const SUPABASE_PUBLIC_KEY =
-      "sb_publishable_JuhKctaCWg8XE4t-okPFnw_fyVV4yhA";
+        const SUPABASE_PUBLIC_KEY =
+            "sb_publishable_JuhKctaCWg8XE4t-okPFnw_fyVV4yhA";
 
-    // We'll replace this with your actual Supabase user ID
-    // after your first GitHub sign-in.
-    const OWNER_USER_ID = "PASTE_OWNER_UUID_HERE";
+        // We'll replace this with your actual Supabase user ID
+        // after your first GitHub sign-in.
+        const OWNER_USER_ID = "3eb8f3c6-e274-49f8-a208-b11c4680ebb8";
 
-    const db = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLIC_KEY
-    );
+        const db = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLIC_KEY
+        );
 
-    // ------------------------------------------
-    // STATUS DISPLAY
-    // ------------------------------------------
+        // ------------------------------------------
+        // STATUS DISPLAY
+        // ------------------------------------------
 
-    const statuses = {
-      online_free: {
-        icon: "🟢",
-        name: "Online, Free",
-        description: "Available right now."
-      },
-      offline_free: {
-        icon: "⭕",
-        name: "Offline, Free",
-        description: "Offline, but not busy."
-      },
-      online_busy: {
-        icon: "🛠️",
-        name: "Online, Busy",
-        description: "Online, but currently busy."
-      },
-      offline_busy: {
-        icon: "❌",
-        name: "Offline, Busy",
-        description: "Offline and busy."
-      }
-    };
-
-    const statusIcon = document.getElementById("statusIcon");
-    const statusName = document.getElementById("statusName");
-    const statusDescription =
-      document.getElementById("statusDescription");
-    const connectionMessage =
-      document.getElementById("connectionMessage");
-
-    function showStatus(status) {
-      const item = statuses[status];
-
-      if (!item) {
-        statusIcon.textContent = "❔";
-        statusName.textContent = "No status published yet";
-        statusDescription.textContent =
-          "The shared status has not been set.";
-        return;
-      }
-
-      statusIcon.textContent = item.icon;
-      statusName.textContent = item.name;
-      statusDescription.textContent = item.description;
-    }
-
-    // ------------------------------------------
-    // LOAD SHARED STATUS
-    // ------------------------------------------
-
-    async function loadStatus() {
-      connectionMessage.textContent = "Loading shared status...";
-
-      const { data, error } = await db
-        .from("my_status")
-        .select("status")
-        .eq("id", 1)
-        .maybeSingle();
-
-      if (error) {
-        console.error(error);
-        connectionMessage.textContent =
-          "Could not load status: " + error.message;
-        return;
-      }
-
-      showStatus(data ? data.status : null);
-      connectionMessage.textContent =
-        "Connected. Status updates appear automatically.";
-    }
-
-    // ------------------------------------------
-    // ACCOUNT DISPLAY
-    // ------------------------------------------
-
-    let currentUser = null;
-
-    function updateAccountDisplay(user) {
-      currentUser = user;
-
-      const signedOut = document.getElementById("signedOut");
-      const signedIn = document.getElementById("signedIn");
-      const adminSection = document.getElementById("adminSection");
-      const lockedSection = document.getElementById("lockedSection");
-
-      if (!user) {
-        signedOut.classList.remove("hidden");
-        signedIn.classList.add("hidden");
-        adminSection.classList.add("hidden");
-        lockedSection.classList.add("hidden");
-        return;
-      }
-
-      signedOut.classList.add("hidden");
-      signedIn.classList.remove("hidden");
-
-      const githubName =
-        user.user_metadata?.user_name ||
-        user.user_metadata?.preferred_username ||
-        user.user_metadata?.name ||
-        user.email ||
-        "GitHub user";
-
-      document.getElementById("accountName").textContent = githubName;
-      document.getElementById("userId").textContent = user.id;
-
-      const isOwner =
-        OWNER_USER_ID !== "PASTE_OWNER_UUID_HERE" &&
-        user.id === OWNER_USER_ID;
-
-      if (isOwner) {
-        adminSection.classList.remove("hidden");
-        lockedSection.classList.add("hidden");
-      } else {
-        adminSection.classList.add("hidden");
-        lockedSection.classList.remove("hidden");
-      }
-    }
-
-    // ------------------------------------------
-    // GITHUB SIGN-IN / SIGN-OUT
-    // ------------------------------------------
-
-    document.getElementById("loginButton").addEventListener(
-      "click",
-      async () => {
-        const redirectTo =
-          window.location.origin + window.location.pathname;
-
-        const { error } = await db.auth.signInWithOAuth({
-          provider: "github",
-          options: {
-            redirectTo: redirectTo
-          }
-        });
-
-        if (error) {
-          alert("Sign-in error: " + error.message);
-        }
-      }
-    );
-
-    document.getElementById("logoutButton").addEventListener(
-      "click",
-      async () => {
-        const { error } = await db.auth.signOut();
-
-        if (error) {
-          alert("Sign-out error: " + error.message);
-        }
-      }
-    );
-
-    document.getElementById("copyIdButton").addEventListener(
-      "click",
-      async () => {
-        const id = currentUser?.id;
-
-        if (!id) return;
-
-        try {
-          await navigator.clipboard.writeText(id);
-          alert("User ID copied!");
-        } catch (error) {
-          prompt("Copy your Supabase user ID:", id);
-        }
-      }
-    );
-
-    // ------------------------------------------
-    // PUBLISH A NEW STATUS
-    // ------------------------------------------
-
-    document.getElementById("saveButton").addEventListener(
-      "click",
-      async () => {
-        const saveButton = document.getElementById("saveButton");
-        const saveMessage = document.getElementById("saveMessage");
-
-        if (!currentUser || currentUser.id !== OWNER_USER_ID) {
-          saveMessage.textContent = "You are not authorized.";
-          return;
-        }
-
-        const newStatus =
-          document.getElementById("statusSelect").value;
-
-        saveButton.disabled = true;
-        saveMessage.textContent = "Publishing...";
-
-        const { error } = await db
-          .from("my_status")
-          .upsert(
-            {
-              id: 1,
-              status: newStatus,
-              owner_id: currentUser.id
+        const statuses = {
+            online_free: {
+                icon: "🟢",
+                name: "Online, Free",
+                description: "Available right now."
             },
-            {
-              onConflict: "id"
+            offline_free: {
+                icon: "⭕",
+                name: "Offline, Free",
+                description: "Offline, but not busy."
+            },
+            online_busy: {
+                icon: "🛠️",
+                name: "Online, Busy",
+                description: "Online, but currently busy."
+            },
+            offline_busy: {
+                icon: "❌",
+                name: "Offline, Busy",
+                description: "Offline and busy."
             }
-          );
+        };
 
-        saveButton.disabled = false;
+        const statusIcon = document.getElementById("statusIcon");
+        const statusName = document.getElementById("statusName");
+        const statusDescription =
+            document.getElementById("statusDescription");
+        const connectionMessage =
+            document.getElementById("connectionMessage");
 
-        if (error) {
-          console.error(error);
-          saveMessage.textContent =
-            "Could not publish: " + error.message;
-          return;
+        function showStatus(status) {
+            const item = statuses[status];
+
+            if (!item) {
+                statusIcon.textContent = "❔";
+                statusName.textContent = "No status published yet";
+                statusDescription.textContent =
+                    "The shared status has not been set.";
+                return;
+            }
+
+            statusIcon.textContent = item.icon;
+            statusName.textContent = item.name;
+            statusDescription.textContent = item.description;
         }
 
-        saveMessage.textContent = "Status published!";
-        await loadStatus();
-      }
-    );
+        // ------------------------------------------
+        // LOAD SHARED STATUS
+        // ------------------------------------------
 
-    // ------------------------------------------
-    // LIVE UPDATES
-    // ------------------------------------------
+        async function loadStatus() {
+            connectionMessage.textContent = "Loading shared status...";
 
-    db.channel("shared-status")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "my_status",
-          filter: "id=eq.1"
-        },
-        () => {
-          loadStatus();
+            const { data, error } = await db
+                .from("my_status")
+                .select("status")
+                .eq("id", 1)
+                .maybeSingle();
+
+            if (error) {
+                console.error(error);
+                connectionMessage.textContent =
+                    "Could not load status: " + error.message;
+                return;
+            }
+
+            showStatus(data ? data.status : null);
+            connectionMessage.textContent =
+                "Connected. Status updates appear automatically.";
         }
-      )
-      .subscribe((status) => {
-        if (status === "SUBSCRIBED") {
-          connectionMessage.textContent =
-            "Connected. Status updates appear automatically.";
+
+        // ------------------------------------------
+        // ACCOUNT DISPLAY
+        // ------------------------------------------
+
+        let currentUser = null;
+
+        function updateAccountDisplay(user) {
+            currentUser = user;
+
+            const signedOut = document.getElementById("signedOut");
+            const signedIn = document.getElementById("signedIn");
+            const adminSection = document.getElementById("adminSection");
+            const lockedSection = document.getElementById("lockedSection");
+
+            if (!user) {
+                signedOut.classList.remove("hidden");
+                signedIn.classList.add("hidden");
+                adminSection.classList.add("hidden");
+                lockedSection.classList.add("hidden");
+                return;
+            }
+
+            signedOut.classList.add("hidden");
+            signedIn.classList.remove("hidden");
+
+            const githubName =
+                user.user_metadata?.user_name ||
+                user.user_metadata?.preferred_username ||
+                user.user_metadata?.name ||
+                user.email ||
+                "GitHub user";
+
+            document.getElementById("accountName").textContent = githubName;
+            document.getElementById("userId").textContent = user.id;
+
+            const isOwner =
+                OWNER_USER_ID !== "PASTE_OWNER_UUID_HERE" &&
+                user.id === OWNER_USER_ID;
+
+            if (isOwner) {
+                adminSection.classList.remove("hidden");
+                lockedSection.classList.add("hidden");
+            } else {
+                adminSection.classList.add("hidden");
+                lockedSection.classList.remove("hidden");
+            }
         }
-      });
 
-    // ------------------------------------------
-    // INITIALIZE
-    // ------------------------------------------
+        // ------------------------------------------
+        // GITHUB SIGN-IN / SIGN-OUT
+        // ------------------------------------------
 
-    async function initialize() {
-      const { data, error } = await db.auth.getSession();
+        document.getElementById("loginButton").addEventListener(
+            "click",
+            async () => {
+                const redirectTo =
+                    window.location.origin + window.location.pathname;
 
-      if (error) {
-        console.error(error);
-      }
+                const { error } = await db.auth.signInWithOAuth({
+                    provider: "github",
+                    options: {
+                        redirectTo: redirectTo
+                    }
+                });
 
-      updateAccountDisplay(data?.session?.user || null);
-      await loadStatus();
+                if (error) {
+                    alert("Sign-in error: " + error.message);
+                }
+            }
+        );
 
-      db.auth.onAuthStateChange((_event, session) => {
-        updateAccountDisplay(session?.user || null);
-      });
-    }
+        document.getElementById("logoutButton").addEventListener(
+            "click",
+            async () => {
+                const { error } = await db.auth.signOut();
 
-    initialize();
-  </script>
+                if (error) {
+                    alert("Sign-out error: " + error.message);
+                }
+            }
+        );
+
+        document.getElementById("copyIdButton").addEventListener(
+            "click",
+            async () => {
+                const id = currentUser?.id;
+
+                if (!id) return;
+
+                try {
+                    await navigator.clipboard.writeText(id);
+                    alert("User ID copied!");
+                } catch (error) {
+                    prompt("Copy your Supabase user ID:", id);
+                }
+            }
+        );
+
+        // ------------------------------------------
+        // PUBLISH A NEW STATUS
+        // ------------------------------------------
+
+        document.getElementById("saveButton").addEventListener(
+            "click",
+            async () => {
+                const saveButton = document.getElementById("saveButton");
+                const saveMessage = document.getElementById("saveMessage");
+
+                if (!currentUser || currentUser.id !== OWNER_USER_ID) {
+                    saveMessage.textContent = "You are not authorized.";
+                    return;
+                }
+
+                const newStatus =
+                    document.getElementById("statusSelect").value;
+
+                saveButton.disabled = true;
+                saveMessage.textContent = "Publishing...";
+
+                const { error } = await db
+                    .from("my_status")
+                    .upsert(
+                        {
+                            id: 1,
+                            status: newStatus,
+                            owner_id: currentUser.id
+                        },
+                        {
+                            onConflict: "id"
+                        }
+                    );
+
+                saveButton.disabled = false;
+
+                if (error) {
+                    console.error(error);
+                    saveMessage.textContent =
+                        "Could not publish: " + error.message;
+                    return;
+                }
+
+                saveMessage.textContent = "Status published!";
+                await loadStatus();
+            }
+        );
+
+        // ------------------------------------------
+        // LIVE UPDATES
+        // ------------------------------------------
+
+        db.channel("shared-status")
+            .on(
+                "postgres_changes",
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "my_status",
+                    filter: "id=eq.1"
+                },
+                () => {
+                    loadStatus();
+                }
+            )
+            .subscribe((status) => {
+                if (status === "SUBSCRIBED") {
+                    connectionMessage.textContent =
+                        "Connected. Status updates appear automatically.";
+                }
+            });
+
+        // ------------------------------------------
+        // INITIALIZE
+        // ------------------------------------------
+
+        async function initialize() {
+            const { data, error } = await db.auth.getSession();
+
+            if (error) {
+                console.error(error);
+            }
+
+            updateAccountDisplay(data?.session?.user || null);
+            await loadStatus();
+
+            db.auth.onAuthStateChange((_event, session) => {
+                updateAccountDisplay(session?.user || null);
+            });
+        }
+
+        initialize();
+    </script>
 </body>
+
 </html>
